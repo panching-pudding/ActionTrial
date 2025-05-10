@@ -2,8 +2,8 @@ name: Build and Release EXE
 
 on:
   push:
-    tags:
-      - 'v*'  # 例: v1.0.0のようなタグがpushされた時にトリガー
+    branches:
+      - main
 
 jobs:
   build:
