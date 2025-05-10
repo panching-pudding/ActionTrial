@@ -4,6 +4,9 @@ on:
   release:
     types: [published]  # リリースが「新しく作成されたとき」にトリガー
 
+permissions:
+  contents: write  # ← これを追加
+
 jobs:
   build:
     runs-on: windows-latest
