@@ -1,9 +1,8 @@
 name: Build and Release EXE
 
 on:
-  push:
-    tags:
-      - 'v*'  # 例: v1.0.0のようなタグがpushされた時にトリガー
+  release:
+    types: [published]  # リリースが「新しく作成されたとき」にトリガー
 
 jobs:
   build:
