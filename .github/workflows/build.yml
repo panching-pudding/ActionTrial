@@ -1,42 +1,38 @@
-name: Build and Release EXE
+name: Build and Upload ZIP on Release Published
 
 on:
   release:
-    types: [published]  # リリースが「新しく作成されたとき」にトリガー
+    types: [published]
 
 permissions:
-  contents: write  # ← これを追加
+  contents: write
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - name: リポジトリをチェックアウト
+      - name: チェックアウト
         uses: actions/checkout@v3
 
-      - name: Pythonをセットアップ
+      - name: Python セットアップ
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: 依存パッケージをインストール
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: 依存をインストール
+        run: pip install -r requirements.txt
 
       - name: PyInstallerでビルド
-        run: pyinstaller --onefile hello.py
+        run: pyinstaller hello.spec
 
-      - name: アーティファクトのアップロード
-        uses: actions/upload-artifact@v4
-        with:
-          name: hello-exe
-          path: dist/hello.exe
+      - name: ZIPファイルを作成（exe + README）
+        run: |
+          powershell Compress-Archive -Path dist/hello.exe, README.md -DestinationPath dist/hello.zip
 
-      - name: GitHubリリースにアップロード
+      - name: リリースにZIPをアップロード
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/hello.exe
+          files: dist/hello.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
